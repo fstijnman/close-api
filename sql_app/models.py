@@ -27,9 +27,11 @@ class Venue(Base):
     postalCode = Column(String)
     email = Column(String)
     phone = Column(String)
+    priceId = Column(Integer, ForeignKey("venueprice.id"))
     createdOn = Column(TIMESTAMP)
 
     event = relationship("Event", back_populates="venue")
+    category = relationship("CategoryVenue", back_populates="venue")
     openinghours = relationship("OpeningHoursVenue", back_populates="venue")
     venueprice = relationship("VenuePrice", back_populates="venue")
 
@@ -42,21 +44,31 @@ class Event(Base):
     description = Column(String)
     startDate = Column(DateTime)
     endDate = Column(DateTime)
-    categoryId = Column(Integer, ForeignKey("category.id"))
     priceId = Column(Integer, ForeignKey("eventprice.id"))
     venueId = Column(Integer, ForeignKey("venues.id"))
     createdOn = Column(TIMESTAMP)
 
     venue = relationship("Venue", back_populates="event")
-    category = relationship("Category", back_populates="event")
+    category = relationship("CategoryEvent", back_populates="event")
     eventprice = relationship("EventPrice", back_populates="event")
     openinghours = relationship("OpeningHoursEvent", back_populates="event")
 
 
-class Category(Base):
-    __tablename__ = "category"
+class CategoryVenue(Base):
+    __tablename__ = "categoryvenue"
 
     id = Column(Integer, primary_key=True, index=True)
+    venueId = Column(Integer, ForeignKey("venues.Id"))
+    name = Column(String)
+
+    venue = relationship("Venue", back_populates="category")
+
+
+class CategoryEvent(Base):
+    __tablename__ = "categoryevent"
+
+    id = Column(Integer, primary_key=True, index=True)
+    eventId = Column(Integer, ForeignKey("events.Id"))
     name = Column(String)
 
     event = relationship("Event", back_populates="category")
@@ -66,7 +78,6 @@ class VenuePrice(Base):
     __tablename__ = "venueprice"
 
     id = Column(Integer, primary_key=True, index=True)
-    venueId = Column(Integer, ForeignKey("venue.Id"))
     priceRegular = Column(Float)
     priceStudent = Column(Float)
     priceAbove60 = Column(Float)
@@ -81,7 +92,6 @@ class EventPrice(Base):
     __tablename__ = "eventprice"
 
     id = Column(Integer, primary_key=True, index=True)
-    eventId = Column(Integer, ForeignKey("event.Id"))
     priceRegular = Column(Float)
     priceStudent = Column(Float)
     priceAbove60 = Column(Float)
