@@ -4,10 +4,10 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
-    TIMESTAMP,
     DateTime,
     Float,
 )
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relation, relationship
 from sqlalchemy.sql.ddl import CreateColumn
 from sqlalchemy.sql.schema import PrimaryKeyConstraint
@@ -28,7 +28,7 @@ class Venue(Base):
     email = Column(String)
     phone = Column(String)
     priceId = Column(Integer, ForeignKey("venueprice.id"))
-    createdOn = Column(TIMESTAMP)
+    createdOn = Column(DateTime(timezone=True), server_default=func.now())
 
     event = relationship("Event", back_populates="venue")
     category = relationship("CategoryVenue", back_populates="venue")
@@ -46,7 +46,7 @@ class Event(Base):
     endDate = Column(DateTime)
     priceId = Column(Integer, ForeignKey("eventprice.id"))
     venueId = Column(Integer, ForeignKey("venues.id"))
-    createdOn = Column(TIMESTAMP)
+    createdOn = Column(DateTime(timezone=True), server_default=func.now())
 
     venue = relationship("Venue", back_populates="event")
     category = relationship("CategoryEvent", back_populates="event")
@@ -58,7 +58,7 @@ class CategoryVenue(Base):
     __tablename__ = "categoryvenue"
 
     id = Column(Integer, primary_key=True, index=True)
-    venueId = Column(Integer, ForeignKey("venues.Id"))
+    venueId = Column(Integer, ForeignKey("venues.id"))
     name = Column(String)
 
     venue = relationship("Venue", back_populates="category")
@@ -68,7 +68,7 @@ class CategoryEvent(Base):
     __tablename__ = "categoryevent"
 
     id = Column(Integer, primary_key=True, index=True)
-    eventId = Column(Integer, ForeignKey("events.Id"))
+    eventId = Column(Integer, ForeignKey("events.id"))
     name = Column(String)
 
     event = relationship("Event", back_populates="category")
@@ -117,7 +117,7 @@ class OpeningHoursVenue(Base):
 
 
 class OpeningHoursEvent(Base):
-    __tablename__ = "openinghoursvenue"
+    __tablename__ = "openinghoursevent"
 
     id = Column(Integer, primary_key=True, index=True)
     eventId = Column(Integer, ForeignKey("events.id"))

@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Optional
 
 from pydantic import BaseModel
@@ -17,14 +18,15 @@ class VenueBase(BaseModel):
 class EventBase(BaseModel):
     title: str
     description: Optional[str] = None
-    startDate: datetime
-    endDate: datetime
+
 
 class VenueCreate(VenueBase):
     pass
 
+
 class EventCreate(EventBase):
     pass
+
 
 class Event(EventBase):
     id: int
@@ -33,9 +35,10 @@ class Event(EventBase):
     class Config:
         orm_mode = True
 
+
 class Venue(VenueBase):
     id: int
-    events: List[Event]: []
+    events: List[Event] = []
 
     class Config:
         orm_mode = True
