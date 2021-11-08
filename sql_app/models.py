@@ -28,12 +28,12 @@ class Venue(Base):
     email = Column(String)
     phone = Column(String)
     priceId = Column(Integer, ForeignKey("venueprice.id"))
+    openinghoursId = Column(Integer, ForeignKey("openinghours.id"))
     createdOn = Column(DateTime(timezone=True), server_default=func.now())
 
     event = relationship("Event", back_populates="venue")
     category = relationship("CategoryVenue", back_populates="venue")
     openinghours = relationship("OpeningHoursVenue", back_populates="venue")
-    venueprice = relationship("VenuePrice", back_populates="venue")
 
 
 class Event(Base):
@@ -44,13 +44,12 @@ class Event(Base):
     description = Column(String)
     startDate = Column(DateTime)
     endDate = Column(DateTime)
-    priceId = Column(Integer, ForeignKey("eventprice.id"))
+    priceId = Column(Integer, ForeignKey("priceschema.id"))
     venueId = Column(Integer, ForeignKey("venues.id"))
     createdOn = Column(DateTime(timezone=True), server_default=func.now())
 
     venue = relationship("Venue", back_populates="event")
     category = relationship("CategoryEvent", back_populates="event")
-    eventprice = relationship("EventPrice", back_populates="event")
     openinghours = relationship("OpeningHoursEvent", back_populates="event")
 
 
@@ -74,8 +73,8 @@ class CategoryEvent(Base):
     event = relationship("Event", back_populates="category")
 
 
-class VenuePrice(Base):
-    __tablename__ = "venueprice"
+class PriceSchema(Base):
+    __tablename__ = "priceschema"
 
     id = Column(Integer, primary_key=True, index=True)
     priceRegular = Column(Float)
@@ -85,46 +84,13 @@ class VenuePrice(Base):
     priceCJP = Column(Float)
     priceMuseumCard = Column(Float)
 
-    venue = relationship("Venue", back_populates="venueprice")
 
-
-class EventPrice(Base):
-    __tablename__ = "eventprice"
+class OpeningHours(Base):
+    __tablename__ = "openinghours"
 
     id = Column(Integer, primary_key=True, index=True)
-    priceRegular = Column(Float)
-    priceStudent = Column(Float)
-    priceAbove60 = Column(Float)
-    priceUnder18 = Column(Float)
-    priceCJP = Column(Float)
-    priceMuseumCard = Column(Float)
-
-    event = relationship("Event", back_populates="eventprice")
-
-
-class OpeningHoursVenue(Base):
-    __tablename__ = "openinghoursvenue"
-
-    id = Column(Integer, primary_key=True, index=True)
-    venueId = Column(Integer, ForeignKey("venues.id"))
     fromDate = Column(DateTime)
     toDate = Column(DateTime)
     weekDay = Column(Integer)
     startHour = Column(Integer)
     endHour = Column(Integer)
-
-    venue = relationship("Venue", back_populates="openinghours")
-
-
-class OpeningHoursEvent(Base):
-    __tablename__ = "openinghoursevent"
-
-    id = Column(Integer, primary_key=True, index=True)
-    eventId = Column(Integer, ForeignKey("events.id"))
-    fromDate = Column(DateTime)
-    toDate = Column(DateTime)
-    weekDay = Column(Integer)
-    startHour = Column(Integer)
-    endHour = Column(Integer)
-
-    event = relationship("Event", back_populates="openinghours")
