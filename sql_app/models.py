@@ -21,6 +21,8 @@ class Venue(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     description = Column(String)
+    latitude = Column(Float)
+    longitude = Column(Float)
     addressLine1 = Column(String)
     addressLine2 = Column(String)
     city = Column(String)

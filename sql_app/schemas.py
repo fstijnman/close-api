@@ -7,6 +7,8 @@ from pydantic import BaseModel
 class VenueBase(BaseModel):
     name: str
     description: Optional[str] = None
+    latitude: float
+    longitude: float
     addressLine1: str
     addressLine2: Optional[str] = None
     city: str
