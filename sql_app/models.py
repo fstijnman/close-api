@@ -29,13 +29,12 @@ class Venue(Base):
     postalCode = Column(String)
     email = Column(String)
     phone = Column(String)
-    priceId = Column(Integer, ForeignKey("venueprice.id"))
+    priceId = Column(Integer, ForeignKey("priceschema.id"))
     openinghoursId = Column(Integer, ForeignKey("openinghours.id"))
     createdOn = Column(DateTime(timezone=True), server_default=func.now())
 
     event = relationship("Event", back_populates="venue")
     category = relationship("CategoryVenue", back_populates="venue")
-    openinghours = relationship("OpeningHoursVenue", back_populates="venue")
 
 
 class Event(Base):
@@ -52,7 +51,6 @@ class Event(Base):
 
     venue = relationship("Venue", back_populates="event")
     category = relationship("CategoryEvent", back_populates="event")
-    openinghours = relationship("OpeningHoursEvent", back_populates="event")
 
 
 class CategoryVenue(Base):
