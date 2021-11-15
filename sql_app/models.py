@@ -9,9 +9,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relation, relationship
-from sqlalchemy.sql.ddl import CreateColumn
-from sqlalchemy.sql.schema import PrimaryKeyConstraint
-from sqlalchemy.sql.sqltypes import Date
 from .database import Base
 
 
